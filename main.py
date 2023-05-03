@@ -1,8 +1,9 @@
 from Peca import Peca
 from Local import Local
 
-listaPecas = [Peca('prego', 25, Local(4, 1)), Peca('prego', 14, Local(4, 1)),
+listaPecas = [Peca('prego', 25, Local(4, 1)), Peca('parafuso', 14, Local(5, 8)),
               Peca('porca', 64, Local(7, 5))]
+
 
 def quantidadeItems(x: int, y:int) -> int:
     soma = 0
@@ -23,9 +24,18 @@ def desenhaArmazem():
 
         print("")
 
+
+def editaQuantidade():
+    for q in listaPecas:
+        nomePeca = input("Indique o nome da peça:\n")
+        if nomePeca == q.nome:
+            q.quantidade = int(input("Indique quantas peças lá estão:\n"))
+            break
+
+
 escolha = -1
 while escolha != 0:
-    escolha = int(input("\n2. Desenhar armazém\n1. Listar artigos\n0. Sair\n"))
+    escolha = int(input("\n0. Sair\n1. Listar artigos\n2. Desenhar armazém\n3. Editar quantidades\n"))
     match escolha:
         case 0:
             break
@@ -33,6 +43,8 @@ while escolha != 0:
             listarArtigos()
         case 2:
             desenhaArmazem()
+        case 3:
+            editaQuantidade()
         case _:
             print("Escolha inválida")
 
