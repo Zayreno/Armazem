@@ -26,8 +26,8 @@ def desenhaArmazem():
 
 
 def editaQuantidade():
+    nomePeca = input("Indique o nome da peça:\n")
     for q in listaPecas:
-        nomePeca = input("Indique o nome da peça:\n")
         if nomePeca == q.nome:
             q.quantidade = int(input("Indique quantas peças lá estão:\n"))
             break
