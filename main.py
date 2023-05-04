@@ -1,5 +1,7 @@
 from Peca import Peca
 from Local import Local
+import csv
+import os
 
 
 def quantidadeItems(x: int, y:int) -> int:
@@ -51,30 +53,36 @@ def adicionarPecas():
     novaPeca = Peca(nomePeca, quantidadePeca, meuLocal)
     listaPecas.append(novaPeca)
 
-FILE_NAME = "lista.csv"
+def salvar_pecas(pecas: list, nome_arquivo: str):
+    with open(nome_arquivo, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Nome', 'Quantidade', 'Local'])
+        for peca in pecas:
+            writer.writerow([peca.nome, peca.quantidade, str(peca.local.x) + " " + str(peca.local.y)])
 
-def saveToFile(list):
-    with open(FILE_NAME, 'w') as f:
-        f.write('\n'.join(list))
 
-def readFile():
-    list = []
-    try:
-        with open(FILE_NAME, 'r') as f:
-            for line in f:
-                list.append(line.strip())
-        return list
-    except:
+def ler_pecas(nome_arquivo: str) -> list:
+    if not os.path.exists(nome_arquivo):
         return []
+    with open(nome_arquivo, mode='r') as file:
+        reader = csv.DictReader(file)
+        pecas = []
+        for row in reader:
+            arr = row['Local'].split(" ")
+            local = Local(arr[0], arr[1])
+            peca = Peca(row['Nome'], int(row['Quantidade']), local)
+            pecas.append(peca)
+        return pecas
 
 escolha = -1
-listaPecas = readFile()
+listaPecas = ler_pecas("lista.csv")
 
 while escolha != 0:
     escolha = int(input("\n0. Sair\n1. Listar artigos\n2. Adicionar peças\n"
                         "3. Editar quantidades\n4. Desenhar armazém\n"))
     match escolha:
         case 0:
+            salvar_pecas(listaPecas, "lista.csv")
             break
         case 1:
             listarArtigos()
