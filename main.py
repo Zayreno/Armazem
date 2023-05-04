@@ -1,9 +1,6 @@
 from Peca import Peca
 from Local import Local
 
-listaPecas = [Peca('prego', 25, Local(4, 1)), Peca('parafuso', 14, Local(5, 8)),
-              Peca('porca', 64, Local(7, 5))]
-
 
 def quantidadeItems(x: int, y:int) -> int:
     soma = 0
@@ -12,9 +9,11 @@ def quantidadeItems(x: int, y:int) -> int:
             soma += i.quantidade
     return soma
 
+
 def listarArtigos():
     for x in listaPecas:
         x.print()
+
 
 def desenhaArmazem():
     for x in range(1, 11):
@@ -31,6 +30,7 @@ def editaQuantidade():
         if nomePeca == q.nome:
             q.quantidade = int(input("Indique quantas peças lá estão:\n"))
             break
+
 
 def adicionarPecas():
     nomePeca = input("Indique o nome da peça:\n")
@@ -51,22 +51,38 @@ def adicionarPecas():
     novaPeca = Peca(nomePeca, quantidadePeca, meuLocal)
     listaPecas.append(novaPeca)
 
+FILE_NAME = "lista.csv"
+
+def saveToFile(list):
+    with open(FILE_NAME, 'w') as f:
+        f.write('\n'.join(list))
+
+def readFile():
+    list = []
+    try:
+        with open(FILE_NAME, 'r') as f:
+            for line in f:
+                list.append(line.strip())
+        return list
+    except:
+        return []
 
 escolha = -1
+listaPecas = readFile()
+
 while escolha != 0:
-    escolha = int(input("\n0. Sair\n1. Listar artigos\n2. Desenhar armazém\n"
-                        "3. Editar quantidades\n4. Adicionar peças\n"))
+    escolha = int(input("\n0. Sair\n1. Listar artigos\n2. Adicionar peças\n"
+                        "3. Editar quantidades\n4. Desenhar armazém\n"))
     match escolha:
         case 0:
             break
         case 1:
             listarArtigos()
         case 2:
-            desenhaArmazem()
+            adicionarPecas()
         case 3:
             editaQuantidade()
         case 4:
-            adicionarPecas()
+            desenhaArmazem()
         case _:
             print("Escolha inválida")
-
