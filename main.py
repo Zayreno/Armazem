@@ -3,6 +3,29 @@ from Local import Local
 import csv
 import os
 
+def salvar_pecas(pecas: list, nome_arquivo: str):
+    with open(nome_arquivo, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Nome', 'Quantidade', 'Local'])
+        for peca in pecas:
+            writer.writerow([peca.nome, peca.quantidade, str(peca.local.x) + " " + str(peca.local.y)])
+
+
+def ler_pecas(nome_arquivo: str) -> list:
+    if not os.path.exists(nome_arquivo):
+        return []
+    with open(nome_arquivo, mode='r') as file:
+        reader = csv.DictReader(file)
+        pecas = []
+        for row in reader:
+            arr = row['Local'].split(" ")
+            local = Local(int(arr[0]), int(arr[1]))
+            peca = Peca(row['Nome'], int(row['Quantidade']), local)
+            pecas.append(peca)
+        return pecas
+
+listaPecas = ler_pecas("lista.csv")
+
 
 def quantidadeItems(x: int, y:int) -> int:
     soma = 0
@@ -33,7 +56,6 @@ def editaQuantidade():
             q.quantidade = int(input("Indique quantas peças lá estão:\n"))
             break
 
-
 def adicionarPecas():
     nomePeca = input("Indique o nome da peça:\n")
     quantidadePeca = int(input("Indique quantas peças lá estão:\n"))
@@ -53,29 +75,8 @@ def adicionarPecas():
     novaPeca = Peca(nomePeca, quantidadePeca, meuLocal)
     listaPecas.append(novaPeca)
 
-def salvar_pecas(pecas: list, nome_arquivo: str):
-    with open(nome_arquivo, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['Nome', 'Quantidade', 'Local'])
-        for peca in pecas:
-            writer.writerow([peca.nome, peca.quantidade, str(peca.local.x) + " " + str(peca.local.y)])
-
-
-def ler_pecas(nome_arquivo: str) -> list:
-    if not os.path.exists(nome_arquivo):
-        return []
-    with open(nome_arquivo, mode='r') as file:
-        reader = csv.DictReader(file)
-        pecas = []
-        for row in reader:
-            arr = row['Local'].split(" ")
-            local = Local(arr[0], arr[1])
-            peca = Peca(row['Nome'], int(row['Quantidade']), local)
-            pecas.append(peca)
-        return pecas
 
 escolha = -1
-listaPecas = ler_pecas("lista.csv")
 
 while escolha != 0:
     escolha = int(input("\n0. Sair\n1. Listar artigos\n2. Adicionar peças\n"
